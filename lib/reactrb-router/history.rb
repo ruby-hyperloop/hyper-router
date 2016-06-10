@@ -1,7 +1,5 @@
 class History
-
   class << self
-
     def setup_handler
       unless @handlers_setup
         handler = lambda { |event| window_history_pop_handler(event) }
@@ -152,6 +150,4 @@ class History
     `debugger`
     nil
   end
-
-
 end

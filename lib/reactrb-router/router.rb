@@ -1,8 +1,5 @@
-
 module React
-
   module Router
-
     class AbortTransition < Exception
     end
 
@@ -142,7 +139,7 @@ module React
             self.class.routing!
             routes = self.class.build_routes(true)
             %x{
-              ReactRouter.run(#{routes}, window.reactive_router_static_location, function(root, state) {
+              ReactRouter.run(#{routes}, window.reactrb_router_static_location, function(root, state) {
                 self.native.props.router_state = state
                 self.root = React.createElement(root, self.native.props);
               });
@@ -225,10 +222,7 @@ module React
           opts[:handler] = React::API.create_native_react_class(opts[:handler])
           RR::NotFoundRoute(opts, &block)
         end
-
       end
     end
-
   end
-
 end

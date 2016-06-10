@@ -1,18 +1,18 @@
-## ReactiveRouter
+## Reactrb Router
 
-ReactiveRouter allows you write and use the React Router in Ruby through Opal.
+Reactrb Router allows you write and use the React Router in Ruby through Opal.
 
 ### Note
 
-This gem is in the process of being re-written. It will be based on latest react-router which is way better. Please see the [v2-4-0 branch](https://github.com/catprintlabs/reactor-router/tree/v2-4-0).
-If you you want to use this branch with `reactive-rails-generator`, be sure to remove `require 'react_router` from `components.rb`. And to use the new Router syntax as per the docs.
+This gem is in the process of being re-written. It will be based on latest react-router which is way better. Please see the [v2-4-0 branch](https://github.com/reactrb/reactrb-router/tree/v2-4-0).
+If you you want to use this branch with `reactrb-rails-generator`, be sure to remove `require 'react_router` from `components.rb`. And to use the new Router syntax as per the docs.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'reactive-router'
+gem 'reactrb-router'
 ```
 
 And then execute:
@@ -27,7 +27,7 @@ Or install it yourself as:
 
 The router is a React component that loads other components depending on the current URL.
 
-Unlike other compnents there can only be one router on a page.
+Unlike other components there can only be one router on a page.
 
 To get you started here is a sample router.   
 
@@ -38,25 +38,25 @@ module Components
     class Show
 
       include React::Router  # instead of React::Component, you use React::Router
-      
+
       # the routes macro creates the mapping between URLs and components to display
 
-      routes(path: "/account/:user_id") do  # i.e. we expect to see something like /account/12345
+      routes(path: '/account/:user_id') do  # i.e. we expect to see something like /account/12345
         # routes can be nested  the dashboard will be at /account/12345/dashboard
         # the DashboardRoute component will be mounted
-        route(name: "Dashboard", path: "dashboard", handler: Components::Accounts::DashboardRoute)
-        route(path: "orders", name: "Orders", handler: Components::Accounts::OrdersRoute)
+        route(name: 'Dashboard', path: 'dashboard', handler: Components::Accounts::DashboardRoute)
+        route(path: 'orders', name: 'Orders', handler: Components::Accounts::OrdersRoute)
         # when displaying an order we need the order order as well as the user_id
-        route(path: "orders/:order_id", name: "Order", handler: Components::Accounts::OrderRoute)
-        route(path: "statement", name: "Statement", handler: Components::Accounts::StatementRoute)
-        # the special redirect route 
-        redirect(from: "/account/:user_id", to: "Dashboard")
+        route(path: 'orders/:order_id', name: 'Order', handler: Components::Accounts::OrderRoute)
+        route(path: 'statement', name: 'Statement', handler: Components::Accounts::StatementRoute)
+        # the special redirect route
+        redirect(from: '/account/:user_id', to: 'Dashboard')
       end
-      
+
       # you grab the url params and preprocess them using the router_param macro.
       # when Router is mounted it will receive the :user_id from the url.  In this case we grab
       # the corresponding active_record model.
-      
+
       router_param :user_id do |id|
         User.find(id)
       end
@@ -69,7 +69,7 @@ module Components
       param :open_invoices_param
       param :user_profiles_param, type: [PaymentProfile]
       param :user_addresses_param, type: [Address]
-      
+
       # because the underlying javascript router has no provisions to pass params we
       # will export states and copy the params to the states so the lower components can read them
       # expect this get fixed in the near future
@@ -79,7 +79,7 @@ module Components
       export_state :open_invoices
       export_state :payment_profiles
       export_state :addresses
-      
+
       # the router also makes a good place for other top level states to be housed (i.e. the flux architecture)
       export_state :order_count
 
@@ -90,24 +90,24 @@ module Components
         open_invoices! open_invoices_param
         payment_profiles! user_profiles_param
         addresses! user_addresses_param
-        
+
         order_count! user.orders.count  # grab our top level state info and save it away
-        
+
       end
 
       # For routers you define a show method instead of a render method
       def show
         div do
           div.account_nav do
-          
+
             # link is a special router component that generates an on page link, that will maintain history etc.
             # basically an intelligent anchor tag.  When a user clicks a link, it will rerender the router, update
             # the history etc.
-            # So for example when "My Statement" is clicked. The route changes to /account/:id/statement
-            
-            link(to: "Dashboard", class: "no-underline btn btn-default", params: { user_id: user.id }) { "Account Dashboard" }
-            link(to: "Orders", class: "no-underline btn btn-default", params: { user_id: user.id }) { "My Quotes & Orders" }
-            link(to: "Statement", class: "no-underline btn btn-default", params: { user_id: user.id }) { "My Statement" }
+            # So for example when 'My Statement' is clicked. The route changes to /account/:id/statement
+
+            link(to: 'Dashboard', class: 'no-underline btn btn-default', params: { user_id: user.id }) { 'Account Dashboard' }
+            link(to: 'Orders', class: 'no-underline btn btn-default', params: { user_id: user.id }) { 'My Quotes & Orders' }
+            link(to: 'Statement', class: 'no-underline btn btn-default', params: { user_id: user.id }) { 'My Statement' }
 
           end
         # someplace in the router show method you will have route_handler component which mounts and renders the component
@@ -116,10 +116,10 @@ module Components
         end
       end
     end
-    
+
     # We can't pass parameters to the routed components, so we set up these mini components
     # which grab the state from router and send it along to the actual component
-  
+
     class DashboardRoute
 
       include React::Component
@@ -161,11 +161,11 @@ module Components
       end
 
       def render
-        OrderShow(order: order_id, referrer: "account")
+        OrderShow(order: order_id, referrer: 'account')
       end
 
     end
-    
+
   end
 end
 ```
@@ -178,7 +178,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-1. Fork it ( https://github.com/catprintlabs/reactor-router/fork )
+1. Fork it ( https://github.com/reactrb/reactrb-router/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

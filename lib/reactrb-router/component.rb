@@ -1,8 +1,6 @@
 module React
   module Component
-
     module ClassMethods
-
     end
 
     def route_handler(*args)
@@ -13,6 +11,5 @@ module React
       opts[:params] = opts[:params].to_n if opts[:params]
       Router::RR::Link(opts, &block)
     end
-
   end
 end
