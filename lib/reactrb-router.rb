@@ -6,7 +6,7 @@ if RUBY_ENGINE == 'opal'
   require 'reactrb-router/version'
 else
   require 'opal'
-  require 'reactrb-ruby'
+  require 'reactrb'
   require 'reactrb-router/window_location'
   require 'reactrb-router/version'
 
