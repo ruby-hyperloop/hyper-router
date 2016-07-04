@@ -4,7 +4,7 @@ module React
     end
 
     class RR < React::NativeLibrary
-      imports ReactRouter
+      imports 'ReactRouter'
     end
 
     def self.included(base)

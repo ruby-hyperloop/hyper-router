@@ -5,9 +5,14 @@ Reactrb Router allows you write and use the React Router in Ruby through Opal.
 ### Note
 
 This gem is in the process of being re-written. It will be based on latest react-router which is way better. Please see the [v2-4-0 branch](https://github.com/reactrb/reactrb-router/tree/v2-4-0).
-If you you want to use this branch with `reactrb-rails-generator`, be sure to remove `require 'react_router` from `components.rb`. And to use the new Router syntax as per the docs.
 
-## Installation
+During the transition you will need to pick between the following branches:
+
+1. **0-7-stable** is the source for the deprecated reactive-router gem, and is compatible with the deprecated reactive-ruby gem.  
+2. **0-8-stable** is the current active source for reactrb-router, and is compatible with the reactrb gem, and is bundled with the pre 1.0 react-router js library source.
+3. **v2-4-0** is being developed, and is compatible with the latest reactrb and react-router.  While not released, it is stable and is recommended if you are developing a new app and need a router.
+
+## Installation (0.8 and beyond...)
 
 Add this line to your application's Gemfile:
 
@@ -21,9 +26,9 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install reactor-router
+    $ gem install reactrb-router
 
-## Usage
+## Usage (0.8 only)
 
 The router is a React component that loads other components depending on the current URL.
 
