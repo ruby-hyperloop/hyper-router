@@ -23,6 +23,7 @@ IF USING NPM/WEBPACK:
   require 'react/router/dsl/route'
   require 'react/router/dsl/index'
   require 'react/router/dsl/transition_context'
+  require 'react/router/history'
   require 'patches/react'
 else
   require 'opal'
