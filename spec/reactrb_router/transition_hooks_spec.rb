@@ -60,7 +60,7 @@ describe "transition hooks", js: true do
     end
 
     page.evaluate_script("window.ReactRouter.hashHistory.push('child2')")
-    event_history_for("route_change").should eq([
+    callback_history_for("on_route_change").should eq([
       ["root", "enter", "next", "/"],
       # on(:enter) replaces "/" with "/child1"
       ["root", "enter", "next", "/child1"], ["child1", "enter", "next", "/child1"],
@@ -133,7 +133,7 @@ describe "transition hooks", js: true do
 
     page.evaluate_script("window.ReactRouter.hashHistory.push('child1')")
     page.evaluate_script("window.ReactRouter.hashHistory.push('child2')")
-    event_history_for("route_change").should eq([
+    callback_history_for("on_route_change").should eq([
       ["app", "change", "prev", "/"], ["app", "change", "next", "/child1"], ["child1", "enter", "next", "/child1"], ["child1", "leave"],
       ["app", "change", "prev", "/child1"], ["app", "change", "next", "/child2"]])
     page.should have_content("Child2 got routed")

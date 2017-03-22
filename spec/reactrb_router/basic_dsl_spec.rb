@@ -82,7 +82,6 @@ describe "ReactrbRouter", js: true do
         end
       end
     end
-
     page.should have_content("param1 = bar")
 
   end
