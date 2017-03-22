@@ -6,7 +6,7 @@ describe "Creating Children Dynamically: The DSL can", js: true do
   it "compose children syncronously with a block" do
 
     mount "TestRouter" do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         def routes
           route("/", mounts: App) do |ct|
             if ct.location[:query][:id] == "1"
@@ -18,19 +18,17 @@ describe "Creating Children Dynamically: The DSL can", js: true do
         end
       end
     end
-
     page.should have_content("Rendering App: No Children")
     page.evaluate_script("window.ReactRouter.hashHistory.push({pathname: 'child', query: {id: 1}})")
     page.should have_content("Child1 got routed")
     page.evaluate_script("window.ReactRouter.hashHistory.push({pathname: 'child', query: {id: 2}})")
     page.should have_content("Child2 got routed")
-
   end
 
   it "compose children asyncronously" do
 
     mount "TestRouter" do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
 
         def routes
           route("/", mounts: App) do |ct|

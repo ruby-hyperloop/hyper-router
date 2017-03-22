@@ -4,7 +4,7 @@ require 'reactrb_router/test_components'
 describe 'Router class', js: true do
   it 'can have a #history hook' do
     mount 'TestRouter' do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         alias history browser_history
 
         def routes
@@ -18,7 +18,7 @@ describe 'Router class', js: true do
 
   it 'can have a #create_element hook' do
     mount 'TestRouter' do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         param :on_create_element, type: Proc
 
         def create_element(component, component_params)
@@ -56,7 +56,7 @@ describe 'Router class', js: true do
 
   it 'can have a #stringify_query hook' do
     mount 'TestRouter', foo: :bar do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         param :on_stringify_query, type: Proc
 
         def stringify_query(query)
@@ -81,7 +81,7 @@ describe 'Router class', js: true do
 
   it 'can have a #parse_query_string hook' do
     mount 'TestRouter' do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         param :on_parse_query_string, type: Proc
 
         def parse_query_string(query_string)
@@ -110,7 +110,7 @@ describe 'Router class', js: true do
 
   it 'can have a #on_error hook' do
     mount 'TestRouter' do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         param :on_error, type: Proc
 
         def on_error(message)
@@ -150,7 +150,7 @@ describe 'Router class', js: true do
 
   it 'can have a #on_update hook' do
     mount 'TestRouter' do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         param :on_update, type: Proc
 
         def on_update(_props, state)
@@ -171,7 +171,7 @@ describe 'Router class', js: true do
 
   it 'can redefine the #render method' do
     mount 'TestRouter' do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         param :on_render, type: Proc
 
         def render

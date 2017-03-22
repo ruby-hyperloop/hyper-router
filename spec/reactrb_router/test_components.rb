@@ -1,9 +1,9 @@
 RSpec.configure do |config|
   config.before(:each) do
     on_client do
-      class App < React::Component::Base
+      class App < Hyperloop::Component
         param optional_param: nil
-
+        collect_other_params_as :router_params
         def render
           div do
             if children.count > 0
@@ -17,13 +17,13 @@ RSpec.configure do |config|
         end
       end
 
-      class Index < React::Component::Base
+      class Index < Hyperloop::Component
         def render
           "Index got routed"
         end
       end
 
-      class Child1 < React::Component::Base
+      class Child1 < Hyperloop::Component
         param optional_param: nil
 
         def render
@@ -35,7 +35,7 @@ RSpec.configure do |config|
         end
       end
 
-      class Child2 < React::Component::Base
+      class Child2 < Hyperloop::Component
         param optional_param: nil
 
         def render
@@ -47,13 +47,13 @@ RSpec.configure do |config|
         end
       end
 
-      class Child3 < React::Component::Base
+      class Child3 < Hyperloop::Component
         def render
           "Child3 got routed"
         end
       end
 
-      class ParamChild < React::Component::Base
+      class ParamChild < Hyperloop::Component
         param :route
 
         def render
@@ -61,7 +61,7 @@ RSpec.configure do |config|
         end
       end
 
-      class QueryChild < React::Component::Base
+      class QueryChild < Hyperloop::Component
         param :location
 
         def render
@@ -69,7 +69,7 @@ RSpec.configure do |config|
         end
       end
 
-      class LinkChild < React::Component::Base
+      class LinkChild < Hyperloop::Component
         param optional_param: nil
 
         def render
@@ -77,13 +77,13 @@ RSpec.configure do |config|
         end
       end
 
-      class NativeTestRouter < React::Component::Base
+      class NativeTestRouter < Hyperloop::Component
         def render
-          React::Router::Native::Router(routes: ROUTES.to_n)
+          Hyperloop::Router::Native::Router(routes: ROUTES.to_n)
         end
       end
 
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         class << self
           attr_accessor :promise
         end

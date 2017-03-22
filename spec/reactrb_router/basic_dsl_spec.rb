@@ -1,18 +1,17 @@
 require 'spec_helper'
 require 'reactrb_router/test_components'
 
-describe "ReactrbRouter", js: true do
+describe "Hyperloop::Router", js: true do
 
   it "can build a simple router" do
 
     mount "TestRouter" do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         def routes
           route("/", mounts: App)
         end
       end
     end
-
     page.should have_content("Rendering App: No Children")
 
   end
@@ -20,7 +19,7 @@ describe "ReactrbRouter", js: true do
   it "reactrb-router will route children" do
 
     mount "TestRouter" do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         def routes
           route("/", mounts: App) do
             route("child1", mounts: Child1)
@@ -41,7 +40,7 @@ describe "ReactrbRouter", js: true do
   it "reactrb-router will route to an index route" do
 
     mount "TestRouter" do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         def routes
           route("/", mounts: App, index: Index) do
             route("child1", mounts: Child1)
@@ -58,7 +57,7 @@ describe "ReactrbRouter", js: true do
   it "the index route can be specified with the index child method" do
 
     mount "TestRouter" do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         def routes
           route("/", mounts: App) do
             index(mounts: Index)
@@ -76,7 +75,7 @@ describe "ReactrbRouter", js: true do
   it "additional params can be passed" do
 
     mount "TestRouter" do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         def routes
           route("/", mounts: ParamChild, param1: :bar)
         end

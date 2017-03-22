@@ -1,6 +1,6 @@
 module React
   class Router
-    include React::Component
+    include Hyperloop::Component::Mixin
 
     class << self
       def hash_history
@@ -122,5 +122,10 @@ module React
         React.create_element(rb_component, rb_props).to_n
       end
     end
+  end
+end
+
+module Hyperloop
+  class Router < React::Router
   end
 end

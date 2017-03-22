@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'reactrb_router/test_components'
 
-describe "ReactrbRouter::link", js: true do
+describe "Hyperloop::Router::link", js: true do
 
   it "can render a clickable link" do
 
@@ -9,7 +9,7 @@ describe "ReactrbRouter::link", js: true do
 
       ComponentHelpers::add_class(:active, color: :red, border: "thin solid")
 
-      class App < React::Component::Base
+      class App < Hyperloop::Component
         def render
           div do
             TestRouter::Link("/", id: "link-4", only_active_on_index: true, active_style: {border: "thin solid", color: :red}) { "Home"}
@@ -19,7 +19,7 @@ describe "ReactrbRouter::link", js: true do
         end
       end
 
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         def routes
           route("/", mounts: App) do
             route(":id").mounts do |ctx|

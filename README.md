@@ -1,9 +1,16 @@
+<<<<<<< HEAD
 ## HyperRouter
 
 HyperRouter allows you write and use the React Router in Ruby through Opal.
+=======
+#  ![](https://github.com/Serzhenka/hyper-loop-logos/blob/master/hyper-router_150.png)Hyper-router
 
-## Installation
+Reactrb Router allows you write and use the React Router in Ruby through Opal.
+>>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
 
+### Note
+
+<<<<<<< HEAD
 Add this line to your application's Gemfile:
 
 ```ruby
@@ -17,11 +24,19 @@ And then execute:
 ## Usage
 
 This is simply a DSL wrapper on [react-router](....)
+=======
+This gem is in the process of being re-written. It will be based on latest react-router which is way better. Please see the [v2-4-0 branch](https://github.com/reactrb/reactrb-router/tree/v2-4-0).
 
-### DSL
+During the transition you will need to pick between the following branches:
+>>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
 
-The following DSL:
+1. **0-7-stable** is the source for the deprecated reactive-router gem, and is compatible with the deprecated reactive-ruby gem.  
+2. **0-8-stable** is the current active source for reactrb-router, and is compatible with the reactrb gem, and is bundled with the pre 1.0 react-router js library source.
+3. **v2-4-0** is being developed, and is compatible with the latest reactrb and react-router.  While not released, it is stable and is recommended if you are developing a new app and need a router.
 
+## Installation (0.8 and beyond...)
+
+<<<<<<< HEAD
 ```ruby
 route("/", mounts: App, index: Home) do
   route("about")
@@ -75,110 +90,91 @@ The above example does not cover all the possible syntax, here are the other met
 #### enter / leave / change transition hooks
 
 for adding an onEnter or onLeave hook you would say:
+=======
+Add this line to your application's Gemfile:
+>>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
 
 ```ruby
-route("foo").on(:leave) { | t | ... }.on(:enter) { | t |.... }
-```
-which follows the react.rb event handler convention.
-
-A `TransitionContext` object will be passed to the handler, which has the following methods:
-
-| method | available on | description |
-|-----------|------------------|-----------------|
-| `next_state` | `:change`, `:enter` | returns the next state object |
-| `prev_state` | `:change` | returns the previous state object |
-| `replace` | `:change`, `:enter` | pass `replace` a new path |
-| `promise` | `:change`, `:enter` | returns a new promise.  multiple calls returns the same promise |
-
-If you return a promise from the `:change` or `:enter` hooks, the transition will wait till the promise is resolved before proceeding.  For simplicity you can call the promise method, but you can also use some other method to define the promise.
-
-The hooks can also be specified as proc values to the `:on_leave`, `:on_enter`, `:on_change` options.
-
-#### multiple component mounting
-
-The `mounts` option can accept a single component, or a hash which will generate a `components` (plural) react-router prop, as in:
-
-`route("groups", mounts: {main: Groups, sidebar: GroupsSidebar})` which is equivalent to:
-
-`{path: "groups", components: {main: Groups, sidebar: GroupsSidebar}}` (json) or
-
-`<Route path="groups" components={{main: Groups, sidebar: GroupsSidebar}} />` JSX
-
-#### The `mounts` option can also take a `Proc` or be specified as a block
-
-The proc is passed a TransitionContext (see **Hooks** above) and may either return a react component to be mounted, or return a promise.  If a promise is returned the transition will wait till the promise is either resolved with a component, or rejected.
-
-`route("courses/:courseId", mounts: -> () { Course }`
-
-is the same as:
-
-```jsx
-<Route path="courses/:courseId" getComponent={(nextState, cb) => {cb(null, Course)}} />
+gem 'reactrb-router'
 ```
 
-Also instead of a proc, a block can be specified with the `mounts` method:
+And then execute:
 
-`route("courses/:courseId").mounts { Course }`
+    $ bundle
 
-Which generates the same route as the above.
+Or install it yourself as:
 
-More interesting would be something like this:
+    $ gem install reactrb-router
+
+## Usage (0.8 only)
+
+The router is a React component that loads other components depending on the current URL.
+
+Unlike other components there can only be one router on a page.
+
+To get you started here is a sample router.   
 
 ```ruby
-route("courses/:id").mounts do | ct |
-  HTTP.get("validate-user-access/courses/#{ct.next_state[:id]}").then {  Course }
-end
-```
+module Components
+  module Accounts
 
-*Note that the above works because of promise chaining.*
+    class Show
 
-You can use the `mount` method multiple times with different arguments as an alternative to passing the the `mount` option a hash:
+      include React::Router  # instead of React::Component, you use React::Router
 
-`route("foo").mount(:baz) { Comp1 }.mount(:bar) { Comp2 }.mount(:bomb)`
+      # the routes macro creates the mapping between URLs and components to display
 
-Note that if no block is given (as in `:bomb` above) the component name will be inferred from the argument (`Bomb` in this case.)
+      routes(path: '/account/:user_id') do  # i.e. we expect to see something like /account/12345
+        # routes can be nested  the dashboard will be at /account/12345/dashboard
+        # the DashboardRoute component will be mounted
+        route(name: 'Dashboard', path: 'dashboard', handler: Components::Accounts::DashboardRoute)
+        route(path: 'orders', name: 'Orders', handler: Components::Accounts::OrdersRoute)
+        # when displaying an order we need the order order as well as the user_id
+        route(path: 'orders/:order_id', name: 'Order', handler: Components::Accounts::OrderRoute)
+        route(path: 'statement', name: 'Statement', handler: Components::Accounts::StatementRoute)
+        # the special redirect route
+        redirect(from: '/account/:user_id', to: 'Dashboard')
+      end
 
-#### The index component can be specified as a proc
+      # you grab the url params and preprocess them using the router_param macro.
+      # when Router is mounted it will receive the :user_id from the url.  In this case we grab
+      # the corresponding active_record model.
 
-Same deal as mount...
+      router_param :user_id do |id|
+        User.find(id)
+      end
 
-`route("foo", index: -> { MyIndex })`
+      # like any component routers can have params that are passed in when the router is mounted
 
-#### The index method
+      param :user_param, type: User
+      param :user_orders_param, type: [Order]
+      param :production_center_address_param, type: Address
+      param :open_invoices_param
+      param :user_profiles_param, type: [PaymentProfile]
+      param :user_addresses_param, type: [Address]
 
-Instead of specifying the index component as a param to the parent route, it can be specified as a child using the
-index method:
+      # because the underlying javascript router has no provisions to pass params we
+      # will export states and copy the params to the states so the lower components can read them
+      # expect this get fixed in the near future
 
-```ruby
-route("/", mounts: About, index: Home) do
-  index(mounts: MyIndex)
-  route("about")
-  route("privacy-policy")
-end
-```
+      export_state :user
+      export_state :production_center_address
+      export_state :open_invoices
+      export_state :payment_profiles
+      export_state :addresses
 
-This is useful because the index method has all the features of a route except that it does not take a path or children.
+      # the router also makes a good place for other top level states to be housed (i.e. the flux architecture)
+      export_state :order_count
 
-#### The `redirect` options
+      before_mount do
+        # before mounting the router we copy the incoming params that the lower level components will need
+        user! user_param
+        production_center_address! production_center_address_param
+        open_invoices! open_invoices_param
+        payment_profiles! user_profiles_param
+        addresses! user_addresses_param
 
-with static arguments:
-
-`redirect("/from/path/spec", to: "/to/path/spec", query: {q1: 123, q2: :abc})`
-
-the `:to` and `:query` options can be Procs which will receive the current state.
-
-Or you can specify the `:to` an `:query` options with blocks:
-
-`redirect("/from/path/spec/:id").to { |curr_state| "/to/path/spec/#{current_state[:id]}"}.query { {q1: 12} }`
-
-#### The `index_redirect` method
-
-just like `redirect` without the first arg: `index_redirect(to: ... query: ...)`
-
-### The Router Component
-
-A router is defined as a subclass of `React::Router` which is itself a `React::Component::Base`.
-
+<<<<<<< HEAD
 ```ruby
 class Components::Router < React::Router
   def routes # define your routes (there is no render method)
@@ -186,11 +182,34 @@ class Components::Router < React::Router
       route("about")
       route("inbox") do
         redirect('messages/:id').to { | params | "/messages/#{params[:id]}" }
+=======
+        order_count! user.orders.count  # grab our top level state info and save it away
+
+>>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
       end
-      route(mounts: Inbox) do
-        route("messages/:id")
+
+      # For routers you define a show method instead of a render method
+      def show
+        div do
+          div.account_nav do
+
+            # link is a special router component that generates an on page link, that will maintain history etc.
+            # basically an intelligent anchor tag.  When a user clicks a link, it will rerender the router, update
+            # the history etc.
+            # So for example when 'My Statement' is clicked. The route changes to /account/:id/statement
+
+            link(to: 'Dashboard', class: 'no-underline btn btn-default', params: { user_id: user.id }) { 'Account Dashboard' }
+            link(to: 'Orders', class: 'no-underline btn btn-default', params: { user_id: user.id }) { 'My Quotes & Orders' }
+            link(to: 'Statement', class: 'no-underline btn btn-default', params: { user_id: user.id }) { 'My Statement' }
+
+          end
+        # someplace in the router show method you will have route_handler component which mounts and renders the component
+        # indicated by the current route.
+        route_handler   
+        end
       end
     end
+<<<<<<< HEAD
   end  
 end
 ```
@@ -237,156 +256,83 @@ class Components::AppLinks
 end
 ```
 
+=======
 
-#### Other router hooks:
+    # We can't pass parameters to the routed components, so we set up these mini components
+    # which grab the state from router and send it along to the actual component
+>>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
 
-There are several other methods that can be redefined to modify the routers behavior
+    class DashboardRoute
 
-#### history
+      include React::Component
 
-```ruby
-class Router < React::Router
-  def history
-  ... return a history object
-  end
-end
-```
+      def render
+        AccountDashboard user: Show.user, addresses: Show.addresses, payment_profiles: Show.payment_profiles
+      end
 
-The two standard history objects are predefined as `browser_history` and `hash_history` so you can say:
+    end
 
-```ruby
-...
-  def history
-    browser_history
-  end
-```
+    class StatementRoute
 
-or just
+      include React::Component
 
-```ruby
-...
-  alias_method :history :browser_history
-```
+      def render
+        Statement production_center_address: Show.production_center_address,
+        open_invoices: Show.open_invoices, current_invoices: Show.open_invoices[:invoices],
+        mailing_address: Show.open_invoices[:mailing_address]
+      end
 
-#### create_element
+    end
 
-`create_element` (if defined) is passed the component that the router will render, and its params.  Use it to intercept, inspect and/or modify the component behavior.
+    class OrdersRoute
 
-`create_element` can return any of these values:
+      include React::Component
 
-+ Any falsy value: indicating that rendering should continue with no modification to behavior.
-+ A `React::Element`, or a native `React.Element` which will be used for rendering.
-+ Any truthy value: indicating that a new Element should be created using the (probably modified) params
+      def render
+        AccountOrders user: Show.user #, orders: Show.orders
+      end
 
-```ruby
-class Router < React::Router
-  def create_element(component, component_params)
-    # add the param :time_stamp to each element as its rendered
-    React.create_element(component, component_params.merge(time_stamp: Time.now))
-  end
-end
-```
+    end
 
-The above could be simplified to:
+    class OrderRoute
 
-```ruby
-...
-  def create_element(component, component_params)
-    component_params[:time_stamp] = Time.now
-  end
-```
+      include React::Component
 
-Just make sure that you return a truthy value otherwise it will ignore any changes to component or params.
-
-Or if you just wanted some kind of logging:
-
-```ruby
-...
-  def create_element(component, component_params)
-    puts "[#{Time.now}] Rendering: #{component.name}" # puts returns nil, so we are jake mate
-  end
-```
-
-The component_params will always contain the following keys as native js objects, and they must stay native js objects:
-
-+ `children`
-+ `history`
-+ `location`
-+ `params`
-+ `route`
-+ `route_params`
-+ `routes`
-
+<<<<<<< HEAD
 We will try to get more fancy with a later version of reactrb-router ;-)
+=======
+      router_param :order_id do |id|
+        Order.find(id)
+      end
+>>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
 
-#### `stringify_query(params_hash)` <- needs work
+      def render
+        OrderShow(order: order_id, referrer: 'account')
+      end
 
-The method used to convert an object from <Link>s or calls to transitionTo to a URL query string.
+    end
 
-```ruby
-class Router < React::Router
-  def stringify_query(params_hash)
-    # who knows doc is a little unclear on this one...is it being passed the full params_hash or just
-    # the query portion.... we shall see...
   end
 end
 ```
-
-#### `parse_query_string(string)` <- needs work
-
-The method used to convert a query string into the route components's param hash
-
-#### `on_error(data)`
-
-While the router is matching, errors may bubble up, here is your opportunity to catch and deal with them. Typically these will come when promises are rejected (see the DSL above for returning promises to handle async behaviors.)
-
-#### `on_update`
-
-Called whenever the router updates its state in response to URL changes.
-
-#### `render`
-
-A `Router` default `render` looks like this:
-
-```ruby
-  def render
-    # Router.router renders the native router component
-    Router.router(build_params)
-  end
-```
-
-
-This is primarily for integrating with other libraries that need to participate in rendering before the route components are rendered. It defaults to render={(props) => <RouterContext {...props} />}.
-
-Ensure that you render a <RouterContext> at the end of the line, passing all the props passed to render.
-
-### React::Router::Component
-
-The class React::Router::Component is a subclass of React::Component::Base that predefines the params that the router will be passing in to your component.  This includes
-
-`params.location`
-
-The current location.
-
-`params.params`
-
-The dynamic segments of the URL.
-
-`params.route`
-
-The route that rendered this component.
-
-`params.route_params`
-
-The subset of `params.params` that were directly specified in this component's route. For example, if the route's path is `users/:user_id` and the URL is /users/123/portfolios/345 then `params.route_params` will be `{user_id: '123'}`, and `params.params` will be `{user_id: '123', portfolio_id: 345}`.
 
 ## Development
 
+<<<<<<< HEAD
 `bundle exec rake` runs test suite
 
 ## Contributing
 
 1. Fork it ( https://github.com/ruby-hyperloop/reactrb-router/tree/hyper-router/fork )
+=======
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
+
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+## Contributing
+
+1. Fork it ( https://github.com/reactrb/reactrb-router/fork )
+>>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

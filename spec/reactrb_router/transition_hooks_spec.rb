@@ -5,7 +5,7 @@ describe "transition hooks", js: true do
   it "reactrb-router will route children" do
 
     mount "TestRouter" do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
         def routes
           route("/", mounts: App) do
             route("child1", mounts: Child1)
@@ -28,7 +28,7 @@ describe "transition hooks", js: true do
   it "receive the prev and next state" do
 
     mount "TestRouter" do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
 
         param :on_route_change, type: Proc
 
@@ -75,7 +75,7 @@ describe "transition hooks", js: true do
   it "can wait on a promise if a promise is returned from the event handler" do
 
     mount "TestRouter" do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
 
         def routes
           route("/", mounts: App) do
@@ -102,7 +102,7 @@ describe "transition hooks", js: true do
   it "be defined as inline procs" do
 
     mount "TestRouter" do
-      class TestRouter < React::Router
+      class TestRouter < Hyperloop::Router
 
         param :on_route_change, type: Proc
 
