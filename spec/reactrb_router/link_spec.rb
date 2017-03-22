@@ -36,10 +36,14 @@ describe "ReactrbRouter::link", js: true do
       page.find("#link-#{i}").click
       page.should have_content("Child#{i} got routed")
       page.find("#link-#{i}.active")
-      page.find("#link-4").native.css_value('border').should_not eq("thin solid")
+      page.find('#link-4')['style'].should_not include('thin solid')
+      #below doesn't work with poltergeist
+      #page.find("#link-4").native.css_value('border').should_not eq("thin solid")
     end
     page.find("#link-4").click
-    page.find("#link-4").native.css_value('border').should eq("thin solid")
+    page.find('#link-4')['style'].should include('thin solid')
+    #below doesn't work with poltergeist
+    #page.find("#link-4").native.css_value('border').should eq("thin solid")
     page.should_not have_content("got routed", wait: 1)
   end
 end

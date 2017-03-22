@@ -2,14 +2,28 @@ module React
   class Router
     include React::Component
 
-    def self.Link(to, opts = {}, &children)
-      opts[:activeClassName] = opts.delete(:active_class).to_n if opts[:active_class]
-      opts[:activeStyle] = opts.delete(:active_style).to_n if opts[:active_style]
-      if opts[:only_active_on_index]
-        opts[:onlyActiveOnIndex] = opts.delete(:only_active_on_index).to_n
+    class << self
+      def hash_history
+        RouterHistory.new(`ReactRouter.hashHistory`)
       end
-      opts[:to] = to.to_n
-      Native::Link(opts, &children)
+
+      def browser_history
+        RouterHistory.new(`ReactRouter.browserHistory`)
+      end
+
+      def create_memory_history(opts = {})
+        RouterHistory.new(`ReactRouter.createMemoryHistory(#{opts.to_n})`)
+      end
+
+      def Link(to, opts = {}, &children)
+        opts[:activeClassName] = opts.delete(:active_class).to_n if opts[:active_class]
+        opts[:activeStyle] = opts.delete(:active_style).to_n if opts[:active_style]
+        if opts[:only_active_on_index]
+          opts[:onlyActiveOnIndex] = opts.delete(:only_active_on_index).to_n
+        end
+        opts[:to] = to.to_n
+        Native::Link(opts, &children)
+      end
     end
 
     def route(*args, &children)
@@ -32,17 +46,9 @@ module React
       React::Router::DSL.build_routes(&block)
     end
 
-    def hash_history
-      `window.ReactRouter.hashHistory`
-    end
-
-    def browser_history
-      `window.ReactRouter.browserHistory`
-    end
-
     def gather_params
       params = { routes: React::Router::DSL.children_to_n(build_routes { routes }) }
-      params[:history] = history if respond_to? :history
+      params[:history] = history.to_n if respond_to? :history
       %w(create_element stringify_query parse_query_string on_error on_update).each do |method|
         params[method.camelcase(false)] = send("#{method}_wrapper") if respond_to? method
       end
@@ -56,7 +62,7 @@ module React
     # private
 
     class Native < React::NativeLibrary
-      imports "ReactRouter"
+      imports 'ReactRouter'
     end
 
     def stringify_query_wrapper
@@ -94,14 +100,14 @@ module React
     private
 
     def convert_props(props)
-      children_are_null = `props.children == undefined || props.children == null`
-      { children:     children_are_null ? [] : [`props.children`].flatten,
-        history:      `props.history`,
-        location:     `props.location`,
-        params:       `props.params`,
-        route:        `props.route`,
-        route_params: `props.route_params`,
-        routes:       `props.routes` }
+      children_are_null = `#{props}.children == undefined || #{props}.children == null`
+      { children:     children_are_null ? [] : [`#{props}.children`].flatten,
+        history:      `#{props}.history`,
+        location:     `#{props}.location`,
+        params:       `#{props}.params`,
+        route:        `#{props}.route`,
+        route_params: `#{props}.route_params`,
+        routes:       `#{props}.routes` }
     end
 
     def convert_or_create_element(result, component, props, rb_component, rb_props)
@@ -109,7 +115,7 @@ module React
       if is_result_native_react_element
         result
       elsif !result
-        `React.createElement(component, props)`
+        `React.createElement(#{component}, #{props})`
       elsif result.is_a? React::Element
         result.to_n
       else

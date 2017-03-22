@@ -27,7 +27,7 @@ IF USING NPM/WEBPACK:
   require 'react/router/dsl/route'
   require 'react/router/dsl/index'
   require 'react/router/dsl/transition_context'
-  #require 'patches/react'
+  require 'react/router/history'
 else
   require 'opal'
   require 'hyper-react'
