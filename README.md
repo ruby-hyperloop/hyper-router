@@ -1,34 +1,12 @@
-<<<<<<< HEAD
-## HyperRouter
-
-HyperRouter allows you write and use the React Router in Ruby through Opal.
-=======
 #  ![](https://github.com/Serzhenka/hyper-loop-logos/blob/master/hyper-router_150.png)Hyper-router
 
 Reactrb Router allows you write and use the React Router in Ruby through Opal.
->>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
 
 ### Note
 
-<<<<<<< HEAD
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'hyper-router'
-```
-
-And then execute:
-
-    $ bundle
-
-## Usage
-
-This is simply a DSL wrapper on [react-router](....)
-=======
 This gem is in the process of being re-written. It will be based on latest react-router which is way better. Please see the [v2-4-0 branch](https://github.com/reactrb/reactrb-router/tree/v2-4-0).
 
 During the transition you will need to pick between the following branches:
->>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
 
 1. **0-7-stable** is the source for the deprecated reactive-router gem, and is compatible with the deprecated reactive-ruby gem.  
 2. **0-8-stable** is the current active source for reactrb-router, and is compatible with the reactrb gem, and is bundled with the pre 1.0 react-router js library source.
@@ -36,63 +14,7 @@ During the transition you will need to pick between the following branches:
 
 ## Installation (0.8 and beyond...)
 
-<<<<<<< HEAD
-```ruby
-route("/", mounts: App, index: Home) do
-  route("about")
-  route("inbox") do
-    redirect('messages/:id').to { | params | "/messages/#{params[:id]}" }
-  end
-  route(mounts: Inbox) do
-    route("messages/:id")
-  end
-end
-```
-
-Is equivalent to this route configuration:
-
-```javascript
-const routes = {
-  path: '/',
-  component: App,
-  indexRoute: { component: Dashboard },
-  childRoutes: [
-    { path: 'about', component: About },
-    {
-      path: 'inbox',
-      component: Inbox,
-      childRoutes: [{
-        path: 'messages/:id',
-        onEnter: ({ params }, replace) => replace(`/messages/${params.id}`)
-      }]
-    },
-    {
-      component: Inbox,
-      childRoutes: [{
-        path: 'messages/:id', component: Message
-      }]
-    }
-  ]
-}
-```
-
-The basic dsl syntax is designed with the following in mind:
-
-1. Most routes have a path so that is the assumed first argument.
-2. Use `mounts` rather than component (reads better?)
-3. Convention over configuration, given a path, the component name can be derived.
-4. Redirect takes the path, and a block (similar to the JSX DSL)
-5. The first param to route can be skipped per the documentation
-6. Use standard ruby lower case method names instead of caps (reserve those for components)
-
-The above example does not cover all the possible syntax, here are the other methods and options:
-
-#### enter / leave / change transition hooks
-
-for adding an onEnter or onLeave hook you would say:
-=======
 Add this line to your application's Gemfile:
->>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
 
 ```ruby
 gem 'reactrb-router'
@@ -173,19 +95,8 @@ module Components
         open_invoices! open_invoices_param
         payment_profiles! user_profiles_param
         addresses! user_addresses_param
-
-<<<<<<< HEAD
-```ruby
-class Components::Router < React::Router
-  def routes # define your routes (there is no render method)
-    route("/", mounts: About, index: Home) do
-      route("about")
-      route("inbox") do
-        redirect('messages/:id').to { | params | "/messages/#{params[:id]}" }
-=======
         order_count! user.orders.count  # grab our top level state info and save it away
 
->>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
       end
 
       # For routers you define a show method instead of a render method
@@ -209,58 +120,9 @@ class Components::Router < React::Router
         end
       end
     end
-<<<<<<< HEAD
-  end  
-end
-```
-#### Mounting your Router
-You will mount this component the usual way (i.e. via `render_component`, `Element#render`, `react_render`, etc) or even by mounting it within a higher level application component.
-
-```ruby
-class Components::App < React::Component::Base
-  render(DIV) do
-    Application::Nav()
-    MAIN do
-      Router()
-    end
-  end
-end
-```
-
-#### navigating
-
-Create links to your routes with `Router::Link`
-```ruby
-#Application::Nav
-  LI.nav_link { TestRouter::Link("/") { "Home" } }
-  LI.nav_link { TestRouter::Link("/about") { "About" } }
-  params.messsages.each do |msg|
-    LI.nav_link { TestRouter::Link("/inbox/messages/#{msg.id}") { msg.title } }
-  end
-```
-
-Additionally, you can manipulate the history with by passing JS as so
-```ruby
-# app/views/components/app_links.rb
-class Components::AppLinks
-  class << self
-    if RUBY_ENGINE == 'opal'
-      def inbox
-        `window.ReactRouter.browserHistory.push('/inbox');`
-      end
-      def message(id)
-        `window.ReactRouter.browserHistory.push('/messages/#{id}');`
-      end
-    end
-  end
-end
-```
-
-=======
 
     # We can't pass parameters to the routed components, so we set up these mini components
     # which grab the state from router and send it along to the actual component
->>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
 
     class DashboardRoute
 
@@ -298,13 +160,9 @@ end
 
       include React::Component
 
-<<<<<<< HEAD
-We will try to get more fancy with a later version of reactrb-router ;-)
-=======
       router_param :order_id do |id|
         Order.find(id)
       end
->>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
 
       def render
         OrderShow(order: order_id, referrer: 'account')
@@ -318,13 +176,6 @@ end
 
 ## Development
 
-<<<<<<< HEAD
-`bundle exec rake` runs test suite
-
-## Contributing
-
-1. Fork it ( https://github.com/ruby-hyperloop/reactrb-router/tree/hyper-router/fork )
-=======
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
@@ -332,7 +183,6 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 1. Fork it ( https://github.com/reactrb/reactrb-router/fork )
->>>>>>> 1118c5494aa1b029e112a936d0f8e6a3f5d945cf
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
