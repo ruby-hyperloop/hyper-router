@@ -7,7 +7,7 @@
 /pkg/
 /spec/reports/
 /tmp/
-
+/spec/test_app/tmp/
 
 
 # Logs
@@ -42,3 +42,9 @@ node_modules
 .bundle
 
 Gemfile.lock
+
+# ignore gems
+*.gem
+
+# ignore Idea
+.idea
